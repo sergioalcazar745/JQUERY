@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #crearcontrol{
+            background-color: transparent;
+            font-weight: semibold;
+            color: #444;
+            font-size: 1rem;
+            padding: 1rem 1.5rem;
+            border: 2px solid #eee;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 1s ease;
+            box-shadow: 0.5rem 0.5rem 0.5rem #ccc, -0.5rem -0.5rem 1rem #fff;
+        }
+
+        #crearcontrol:hover{
+            box-shadow: 0.5rem 0.5rem 1rem #fff, -0.5rem -0.5rem 1rem #ccc;
+        }
+
+        #crearcontrol:active{
+            box-shadow: inset 0.2rem 0.2rem 1rem #fff, inset -0.2rem -0.2rem 1rem #ccc;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Generar controles</h1>
+    <label>Introduzca un texto:</label>
+    <input type="text" id="cajatexto">
+    <button type="button" id="crearcontrol">Crear control</button>
+    <div id="padre"></div>
+</body>
+<script src="js/jquery-3.6.1.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $("#crearcontrol").click(function(){
+            var texto = $("#cajatexto").val();
+            if(texto != ""){
+                var h1 = $("<h1>", {"text":texto, "css": "color:green"});
+                h1.click(function(){
+                    $(this).css("color", "red");
+                });
+                $("#padre").append(h1)               
+            }
+        })
+    });
+</script>
+</html>

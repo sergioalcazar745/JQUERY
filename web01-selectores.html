@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selectores JQUERY</title>
+    <style>
+        .azul{
+            color: blue;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="azul">Selectores JQUERY</h1>
+    <h1 id="titulo1">Titulo 1 ID</h1>
+    <p>Aprendiendo Jquery...</p>
+    <button type="button" class="azul">Soy un botón</button>
+    <p>Soy otro párrafo</p>
+    <button type="button">Soy un botón</button>
+</body>
+<script src="js/jquery-3.6.1.min.js"></script>
+<script>
+    $(document).ready(function(){
+        // $("h1").hide();
+        // $("#titulo1").show();
+        // EVENTOS
+        $("button").click(function(){
+            $("p").hide();
+        })
+
+        $(".azul").click(function(){
+            $(this).fadeOut(3000);
+        });
+    });
+</script>
+</html>
