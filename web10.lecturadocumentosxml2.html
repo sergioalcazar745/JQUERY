@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Departamentos atributos</h1>
+    <label>Introduzca ID: </label>
+    <input type="text" id="cajaid">
+    <button type="button" id="botonbuscarid">Buscar departamento</button><br/>
+    <hr>
+    <label>Introduzca localidad: </label>
+    <input type="text" id="cajalocalidad">
+    <button type="button" id="botonbuscarlocalidad">Buscar localidad</button>
+    <hr>
+    <button type="button" id="cargardepartamentos">Cargar departamentos</button>
+    <hr>
+    <table style="margin-top: 25px;" id="tabladepartamentos">
+        <thead>
+            <tr>
+                <th>NÚMEROS</th>
+                <th>NOMBRE</th>
+                <th>LOCALIDAD</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <h1 id="resultado"></h1>
+</body>
+<script src="js/jquery-3.6.1.min.js"></script>
+<script>
+    $(document).ready(function () {
+        var html = "";
+        $("#cargardepartamentos").click(function () {
+            $.get("documents/departamentos.xml", function (data) {
+                $(data).find("DEPT").each(function () {
+                    html += "<tr>";
+                    html += "<td>" + $(this).attr("DEPT_NO") + "</td>";
+                    html += "<td>" + $(this).find("DNOMBRE").first().text() + "</td>";
+                    html += "<td>" + $(this).find("LOC").first().text() + "</td>";
+                    html += "<tr>";
+                })
+                $("#tabladepartamentos tbody").html(html);
+            });
+        });
+
+        $("#botonbuscarid").click(function () {
+            html = "";
+            var id = $("#cajaid").val();
+            $.get("documents/departamentos.xml", function (data) {
+                var filtro = "DEPT[DEPT_NO=" + id + "]";
+                var dept = $(data).find(filtro).first();
+                if(dept.length > 0){
+                    html += "<tr>";
+                    html += "<td>" + dept.attr("DEPT_NO") + "</td>";
+                    html += "<td>" + dept.find("DNOMBRE").first().text() + "</td>";
+                    html += "<td>" + dept.find("LOC").first().text() + "</td>";
+                    html += "<tr>";
+                }else{
+                    $("#resultado").text("No existe el departamento con el id " + id);
+                }                
+                $("#tabladepartamentos tbody").html(html);
+            });
+        });
+
+        $("#botonbuscarlocalidad").click(function () {
+            html = "";
+            var resultado = "";
+            var localidad = $("#cajalocalidad").val();
+            $.get("documents/departamentos.xml", function (data) {
+                var filtro =  "LOC:contains("+localidad+")";
+                var dept = $(data).find(filtro);
+                if(dept.length > 0){
+                    dept.each(function(){
+                        resultado += localidad + ", "
+                        $("#resultado").text(resultado);
+                    });
+                }else{
+                    $("#resultado").text("No existe el departamento con la localidad " + localidad);
+                }                 
+                $("#tabladepartamentos tbody").html(html);
+            });
+        });
+
+        // var filtro = "DEPT:contains(ELCHE)";
+                // var dept = $(data).find(filtro);
+                // if(dept.length > 0){
+                //     dept.each(function(){
+                //         html += "<tr>";
+                //         html += "<td>" + dept.attr("DEPT_NO") + "</td>";
+                //         html += "<td>" + dept.find("DNOMBRE").first().text() + "</td>";
+                //         html += "<td>" + dept.find("LOC").first().text() + "</td>";
+                //         html += "<tr>";
+                //     });
+                // }else{
+                //     html += "<tr>";
+                //     html += "<td>NO EXISTE LA LOCALIDAD"+localidad+"</td>";
+                //     html += "<tr>";
+                // } 
+    });
+</script>
+
+</html>

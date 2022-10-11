@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Cliente con botones</h1>
+    <div id="caja"></div>
+    <table style="margin-top: 25px;" id="tablacliente">
+        <thead>
+            <tr>
+                <th>NOMBRE</th>
+                <th>DIRECCION</th>
+                <th>EMAIL</th>
+                <th>CODIGOPOSTAL</th>
+                <th>PAGINAWEB</th>
+                <th>IMAGENCLIENTE</th>
+            </tr>
+        </thead>
+        <tbody style="padding-left: 20px;"></tbody>
+    </table>
+</body>
+<script src="js/jquery-3.6.1.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $.get("documents/ClientesXML.xml", function (data) {
+            var clientes = $(data).find("CLIENTE");
+            clientes.each(function(){
+                var boton = $("<button>", {"text":$(this).find("NOMBRE").first().text(), "id":$(this).attr("IDCLIENTE")});
+                boton.click(function(){
+                    var html = "";
+                    btnclick = $(this);
+                    $.get("documents/ClientesXML.xml", function (data) {
+                        var filtro = "CLIENTE[IDCLIENTE=" + btnclick.attr("id") + "]";
+                        var cliente = $(data).find(filtro);
+                        html = 
+                        `
+                        <tr>
+                            <td>${cliente.find("NOMBRE").first().text()}</td> 
+                            <td>${cliente.find("DIRECCION").first().text()}</td>
+                            <td>${cliente.find("EMAIL").first().text()}</td>
+                            <td>${cliente.find("CODIGOPOSTAL").first().text()}</td>
+                            <td>${cliente.find("PAGINAWEB").first().text()}</td>   
+                            <td><img src="${cliente.find("IMAGENCLIENTE").first().text()}"/></td>
+                        </tr>
+                        `;
+                        $("#tablacliente tbody").html(html);
+                    });
+                });
+                $("#caja").append(boton);
+            });
+        });    
+        // html += "<tr>";
+        //             html += "<td>" + dept.attr("DEPT_NO") + "</td>";
+        //             html += "<td>" + dept.find("DNOMBRE").first().text() + "</td>";
+        //             html += "<td>" + dept.find("LOC").first().text() + "</td>";
+        //             html += "<tr>";    
+    });
+</script>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <input type="range" id="rango" value="1" min="1" max="10">
+    <h1 id="valor"></h1>
+    <div id="botones"></div>
+    <div id="imagenes"></div>
+</body>
+<script src="js/jquery-3.6.1.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#rango").change(function () {
+            var numeroImagenes = parseInt($("#rango").val());
+            $("#botones").empty();
+            $("#imagenes").empty();
+            for (let i = 1; i <= numeroImagenes; i++) {
+                var boton = $("<button>", { "text": "Imagen " + i, "data-indice": i });
+                boton.click(function () {
+                    var indiceBoton = parseInt($(this).data("indice"));
+                    $("img").each(function () {
+                        var indiceImagen = parseInt($(this).data("indice"));
+                        if (indiceBoton == indiceImagen) {
+                            $(this).attr("src", "images/imagen2.png");
+                        }
+                    });
+                });
+                var imagen = $("<img>", { "src": "images/imagen1.jpg", "data-indice": i, "width":"150px", "height":"150px"});
+                $("#botones").append(boton);
+                $("#imagenes").append(imagen);
+                $("#valor").text(numeroImagenes)
+            }
+        });
+    }); 
+</script>
+
+</html>

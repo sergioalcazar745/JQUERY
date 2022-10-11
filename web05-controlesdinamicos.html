@@ -20,7 +20,7 @@
         $("#valorrange").text($("#rango").val());
         crearImagen();
         $("#rango").change(function () {
-            var valor = parseInt($("#rango").val());
+            var valor = parseInt($(this).val());
             $("#caja").empty();
             for (let i = 0; i < valor; i++) {
                 crearImagen();
