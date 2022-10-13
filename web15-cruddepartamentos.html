@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejemplo de CRUD</title>
+</head>
+
+<body>
+    <h1>EJEMPLO CRUD Jquery JSON</h1>
+    <label for="numero">Número: </label>
+    <input type="text" id="cajanumero"><br />
+    <label for="nombre">Nombre</label>
+    <input type="text" id="cajanombre"><br />
+    <label for="localidad">Localidad</label>
+    <input type="text" id="cajalocalidad">
+    <hr />
+    <button type="button" id="insertar">Insertar</button>
+    <button type="button" id="update">Modificar</button>
+    <button type="button" id="delete">Eliminar</button>
+    <button type="button" id="buscarpornumero">Buscar por numero</button>
+    <hr />
+    <table border="1" id="tabladepartamentos">
+        <thead>
+            <tr>
+                <th>Número</th>
+                <th>Nombre</th>
+                <th>Localidad</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <h1 id="resultado"></h1>
+</body>
+<script src="js/jquery-3.6.1.min.js"></script>
+<script>
+    function cargarDepartamentos() {
+        var url = "https://apicruddepartamentoscore.azurewebsites.net/";
+        $.getJSON(url + "api/departamentos", function (data) {
+            var html = "";
+            $.each(data, function (index, departamento) {
+                html += "<tr>";
+                html += "<td>" + departamento.numero + "</td>";
+                html += "<td>" + departamento.nombre + "</td>";
+                html += "<td>" + departamento.localidad + "</td>";
+                html += "</tr>";
+            });
+            $("#tabladepartamentos tbody").html(html);
+        });
+    }
+
+    function getJSONDepartamento() {
+        var numero = $("#cajanumero").val();
+        var nombre = $("#cajanombre").val();
+        var localidad = $("#cajalocalidad").val();
+        var departamento = new Object();
+
+        departamento.numero = parseInt(numero);
+        departamento.nombre = nombre;
+        departamento.localidad = localidad;
+
+        return JSON.stringify(departamento);
+    }
+
+    $(document).ready(function () {
+        cargarDepartamentos();
+        $("#insertar").click(function () {
+            var dataJson = getJSONDepartamento();
+            $.ajax({
+                url: url + "api/departamentos",
+                method: "POST",
+                contentType: "application/json",
+                data: dataJson,
+                success: function (data) {
+                    cargarDepartamentos();
+                    $("#resultado").text("Insertado correctamente");
+                },
+                error: function (error) {
+                    $("#resultado").text("Error");
+                }
+            });
+        });
+
+        $("#update").click(function () {
+            var dataJson = getJSONDepartamento();
+            $.ajax({
+                url: url + "api/departamentos",
+                method: "PUT",
+                contentType: "application/json",
+                data: dataJson,
+                success: function (data) {
+                    cargarDepartamentos();
+                    $("#resultado").text("Actualiado correctamente")
+                },
+                error: function (error) {
+                    $("#resultado").text("Error");
+                }
+            });
+        });
+
+        $("#delete").click(function () {
+            var numero = $("#cajanumero").val();
+            $.ajax({
+                url: url + "api/departamentos/" + numero,
+                method: "DELETE",
+                success: function (data) {
+                    cargarDepartamentos();
+                    $("#resultado").text("Eliminado correctamente")
+                },
+                error: function (error) {
+                    $("#resultado").text("Error");
+                }
+            });
+        });
+
+        $("#buscarpornumero").click(function () {
+            var numero = parseInt($("#cajanumero").val());
+
+            $.getJSON(url + "api/departamentos", function (data) {
+                var encontrado = false;
+                $.each(data, function (index, departamento) {
+                    if (departamento.numero == numero) {
+                        encontrado = true;
+                        $("#resultado").text("Numero: " + departamento.numero + ", Nombre: " + departamento.nombre + ", Localidad: " + departamento.localidad)
+                    }
+                });
+                
+                if (!encontrado) {
+                    $("#resultado").text("No existe el numero");
+                }
+            });
+        });
+    });
+
+
+</script>
+
+</html>

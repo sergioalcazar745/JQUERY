@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Selecciona al jugador</h1>
+    <select id="desplegable"></select>
+    <div id="info"></div>
+</body>
+<script src="js/jquery-3.6.1.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            url: "documents/jugadores.json",
+            method: "GET",
+            dataType: "json",
+            success: function (data) {
+                $.each(data.jugadores, function (index, jugador) {
+                    var option = $("<option>", { "text": jugador.nombre });
+                    $("#desplegable").append(option);
+                });
+            },
+            error: function (error) {
+
+            }
+        })
+        $("#desplegable").change(function () {
+            var indice = $(this).prop("selectedIndex");
+            var html = "";
+            $.getJSON("documents/jugadores.json", function (data) {
+                var jugador = data.jugadores[indice];
+                    html +=
+                        `
+                    <p>${jugador.numero}</p>
+                    <p>${jugador.nombre}</p>
+                    <p>${jugador.posicion}</p>
+                    <p>${jugador.edad}</p>
+                    <img src="${jugador.imagen}"/>
+
+                    `;
+                $("#info").html(html);
+            });
+        });
+    });
+</script>
+
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+</body>
+<script src="/js/jquery-3.6.1.min.js"></script>
+<script>
+    $(document).ready(function () {
+        var settings = {
+            "async": true,
+            "crossDomain": true,
+            "url": "https://opendata.aemet.es/opendata/api/valores/climatologicos/inventarioestaciones/todasestaciones/?api_key=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzZXJnaW8uYWxjYXphckB0YWphbWFyMzY1LmNvbSIsImp0aSI6IjRkZWUwOWI5LTY0MGEtNGIwYy1hYmVmLTM1NmYyMjMwNzI5OSIsImlzcyI6IkFFTUVUIiwiaWF0IjoxNjY1NjU4NTMwLCJ1c2VySWQiOiI0ZGVlMDliOS02NDBhLTRiMGMtYWJlZi0zNTZmMjIzMDcyOTkiLCJyb2xlIjoiIn0.VqfBC6gvly0PE2Y5LgLbg7S5XXsSkzJVfF7pW9f-3Gs",
+            "method": "GET",
+            "headers": {
+                "cache-control": "no-cache"
+            }
+        }
+
+        $.ajax(settings).done(function (response) {
+            console.log(response);
+        });
+    });
+</script>
+
+</html>
