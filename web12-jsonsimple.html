@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leer JSON simple</title>
+</head>
+<body>
+    <h1>Lecutra JSON simple</h1>
+    <button type="button" id="botonleer">Leer documento simple</button>
+    <ul id="tareas"></ul>
+</body>
+<script src="js/jquery-3.6.1.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $("#botonleer").click(function(){
+            $.getJSON("documents/tareas.json", function(data){
+                var html = "";
+                $.each(data, function(key,value){
+                    html += "<li>Key: "+key+", Value: "+value+"</li>";
+                });
+                $("#tareas").html(html);
+            });
+        });
+    });
+</script>
+</html>

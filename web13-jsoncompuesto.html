@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leer JSON compuesto</title>
+</head>
+<body>
+    <h1>Lecutra JSON compuesto</h1>
+    <button type="button" id="botonleer">Leer documento compuesto</button>
+    <ul id="tareas"></ul>
+</body>
+<script src="js/jquery-3.6.1.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $("#botonleer").click(function(){
+            // $.getJSON("documents/clientes.json", function(data){
+            //     var html = "";
+            //     $.each(data.clientes, function(index,value){
+            //         $.each(value, function(key, value){
+            //             html += "<li>Index: "+index+", Key: "+key+" Value: "+value+"</li>";
+            //         });                    
+            //     });
+            //      $("#tareas").html(html);
+            // });
+            
+            $.ajax({
+               url:"documents/clientes.json",
+               method: "GET",
+               dataType: "json",
+               success: function(data){
+                    console.log("Leyendo servicio");
+                    var html = "";
+                    $.each(data.clientes, function(index, cliente){
+                        html += "<li>Index: "+index+" Value: "+cliente.nombre+"</li>";
+                    });
+                    $("#tareas").html(html);
+               }, error: function(){
+                    console.log("Error en el servicio")
+               } 
+            });
+        });
+    });
+</script>
+</html>
