@@ -36,6 +36,7 @@
         <label for="camas">Camas: </label>
         <input type="text" id="camas"><br />
         <button type="button" id="botonupdate" style="margin-top: 10px;">Modificar hotel</button>
+        <button type="button" id="botonagregar" style="margin-top: 10px;">Agregar hotel</button>
     </div>
     <h2 id="error"></h2>
 </body>
@@ -46,6 +47,9 @@
         cargarHoteles();
         $("#botonupdate").click(function () {
             putHotel();
+        });
+        $("#botonagregar").click(function () {
+            postHotel();
         });
     });
 
@@ -115,6 +119,29 @@
         });
     }
 
+    function postHotel(){
+        var hotel = new Object();
+        hotel.idhospital = parseInt($("#idhospital").val());
+        hotel.nombre = $("#nombre").val();
+        hotel.direccion = $("#direccion").val();
+        hotel.telefono = $("#telefono").val();
+        hotel.camas = parseInt($("#camas").val());
+        dataJson = JSON.stringify(hotel);
+        $.ajax({
+            url: url + "webresources/hospitales/post/",
+            method: "POST",
+            contentType: "application/json",
+            data: dataJson,
+            success: function (data) {
+                cargarHoteles();
+                limpiarCampos();
+            },
+            error: function (error) {
+                $("#error").text("Error");
+            }
+        });
+    }
+
     function deleteHotel(id) {
         $.ajax({
             url: url + "webresources/hospitales/delete/"+id,
@@ -127,6 +154,14 @@
             }
         });
     }   
+
+    function limpiarCampos(){
+        $("#idhospital").val("");
+        $("#nombre").val("");
+        $("#direccion").val("");
+        $("#telefono").val("");
+        $("#camas").val("");
+    }
 </script>
 
 </html>
