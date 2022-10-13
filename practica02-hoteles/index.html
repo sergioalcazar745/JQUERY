@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>API Hoteles</h1>
+    <table border="1" id="tablahoteles">
+        <thead>
+            <tr>
+                <th>IDHospital</th>
+                <th>Nombre</th>
+                <th>Direccion</th>
+                <th>Teléfono</th>
+                <th>Camas</th>
+                <th>Obtener</th>
+                <th>Eliminar</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <div id="cajahotel" style="margin-top: 30px;">
+        <label for="idHospital">IDHospital: </label>
+        <input type="text" id="idhospital"><br />
+        <label for="nombre">Nombre: </label>
+        <input type="text" id="nombre"><br />
+        <label for="direccion">Direccion: </label>
+        <input type="text" id="direccion"><br />
+        <label for="telefono">Teléfono: </label>
+        <input type="text" id="telefono"><br />
+        <label for="camas">Camas: </label>
+        <input type="text" id="camas"><br />
+        <button type="button" id="botonupdate" style="margin-top: 10px;">Modificar hotel</button>
+    </div>
+    <h2 id="error"></h2>
+</body>
+<script src="/js/jquery-3.6.1.min.js"></script>
+<script>
+    var url = "https://apicrudhospital.azurewebsites.net/";
+    $(document).ready(function () {
+        cargarHoteles();
+        $("#botonupdate").click(function () {
+            putHotel();
+        });
+    });
+
+    function cargarHoteles() {
+        $("#tablahoteles tbody").empty();
+        $.getJSON(url + "webresources/hospitales", function (data) {
+            $.each(data, function (index, hotel) {
+                var fila = $("<tr>");
+                var idHospital = $("<td>", { "text": hotel.idhospital });
+                var nombre = $("<td>", { "text": hotel.nombre });
+                var direccion = $("<td>", { "text": hotel.direccion });
+                var telefono = $("<td>", { "text": hotel.telefono });
+                var camas = $("<td>", { "text": hotel.camas });
+                var obtener = $("<td>");
+                var enlaceObtener = $("<a>", { "text": "Editar", "href": "#", "data-hotel": hotel.idhospital });
+                obtener.append(enlaceObtener);
+                enlaceObtener.click(function () {
+                    getHotel($(this).data("hotel"));
+                });
+                var eliminar = $("<td>");
+                var enlaceEliminar = $("<a>", { "text": "Borrar", "href": "#", "data-hotel": hotel.idhospital });
+                eliminar.append(enlaceEliminar);
+                enlaceEliminar.click(function () {
+                    deleteHotel($(this).data("hotel"));
+                });
+                fila.append(idHospital);
+                fila.append(nombre);
+                fila.append(direccion);
+                fila.append(telefono);
+                fila.append(camas);
+                fila.append(obtener);
+                fila.append(eliminar);
+                $("#tablahoteles tbody").append(fila);
+            });
+        });
+    }
+
+    function getHotel(id) {
+        $.getJSON(url + "webresources/hospitales/" + id, function (data) {
+            $("#idhospital").val(data.idhospital);
+            $("#nombre").val(data.nombre);
+            $("#direccion").val(data.direccion);
+            $("#telefono").val(data.telefono);
+            $("#camas").val(data.camas);
+        });
+    }
+
+    function putHotel() {
+        var hotel = new Object();
+        hotel.idhospital = parseInt($("#idhospital").val());
+        hotel.nombre = $("#nombre").val();
+        hotel.direccion = $("#direccion").val();
+        hotel.telefono = $("#telefono").val();
+        hotel.camas = parseInt($("#camas").val());
+        dataJson = JSON.stringify(hotel);
+        $.ajax({
+            url: url + "webresources/hospitales/put/",
+            method: "PUT",
+            contentType: "application/json",
+            data: dataJson,
+            success: function (data) {
+                cargarHoteles();
+            },
+            error: function (error) {
+                $("#error").text("Error");
+            }
+        });
+    }
+
+    function deleteHotel(id) {
+        $.ajax({
+            url: url + "webresources/hospitales/delete/"+id,
+            method: "DELETE",
+            success: function (data) {
+                cargarHoteles();
+            },
+            error: function (error) {
+                $("#error").text("Error");
+            }
+        });
+    }   
+</script>
+
+</html>

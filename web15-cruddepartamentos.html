@@ -36,8 +36,8 @@
 </body>
 <script src="js/jquery-3.6.1.min.js"></script>
 <script>
-    function cargarDepartamentos() {
-        var url = "https://apicruddepartamentoscore.azurewebsites.net/";
+    var url = "https://apicruddepartamentoscore.azurewebsites.net/";
+    function cargarDepartamentos() {        
         $.getJSON(url + "api/departamentos", function (data) {
             var html = "";
             $.each(data, function (index, departamento) {
@@ -85,6 +85,7 @@
 
         $("#update").click(function () {
             var dataJson = getJSONDepartamento();
+            console.log(typeof(dataJson))
             $.ajax({
                 url: url + "api/departamentos",
                 method: "PUT",
