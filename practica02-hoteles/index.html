@@ -112,6 +112,7 @@
             data: dataJson,
             success: function (data) {
                 cargarHoteles();
+                limpiarCampos();
             },
             error: function (error) {
                 $("#error").text("Error");
