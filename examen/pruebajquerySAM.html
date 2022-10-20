@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <label for="selectoficio">Seleccione un oficio: </label>
+    <select id="selectoficio" name="selectoficio"></select>
+    <hr />
+    <label for="cajaincremento">Incremento salarial: </label>
+    <input type="text" id="cajaincremento" name="cajaincremento" />
+    <hr />
+    <button type="button" id="botonincremento">Incremento salarial</button>
+    <hr />
+    <table id="tablaoficios">
+      <thead>
+        <tr>
+          <th>Apellido</th>
+          <th>Oficio</th>
+          <th>Salario</th>          
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <h1 style="color: red"></h1>
+  </body>
+  <script src="./jquery-3.6.1.min.js"></script>
+  <script>
+    
+    var requestBase = "https://apiempleadosaction.azurewebsites.net/";
+
+    $(document).ready(function () {
+        mostrarOficios();
+        $("#botonincremento").click(function () {
+            modificarOficio();
+        });
+    });
+
+    function mostrarOficios() {
+      var request = "api/Empleados/GetOficios/oficios";
+      $.getJSON(requestBase + request, function (data) {
+        $.each(data, function (index, oficio) {
+          var option = $("<option>", { text: oficio });
+          $("#selectoficio").append(option);
+        });
+      });
+    }
+
+    function modificarOficio() {
+      var incremento = parseInt($("#cajaincremento").val());
+      var oficio = $("#selectoficio").val();
+      var request = "/api/Empleados/IncrementarSalarioOficios/" + oficio + "/" + incremento;
+
+      if (!isNaN(incremento)) {
+        $.ajax({
+          url: requestBase + request,
+          method: "PUT",
+          contentType: "application/json",
+          success: function (data) {
+            mostrarTabla();
+          },
+          error: function () {
+            $("h1").text("Error peticion")
+          },
+        });
+      } else {
+        $("h1").text("Error tipo de dato")
+      }
+    }
+
+    function mostrarTabla(){
+        var oficio = $("#selectoficio").val();
+        var request = "api/Empleados/GetEmpleadosOficio/empleadosoficio/"+oficio; 
+        $.getJSON(requestBase + request, function(data){
+            $("#tablaoficios tbody").empty();
+            $.each(data, function(index, object){
+                var tr = $("<tr>");
+                var tdApellido = $("<td>", {"text": object.apellido})
+                var tdSalario = $("<td>", {"text": object.salario})
+                tdSalario.css({"color":"red"})
+                var tdOficio = $("<td>", {"text": object.oficio})
+                tr.append(tdApellido, tdOficio, tdSalario);
+                $("#tablaoficios tbody").append(tr);
+            });            
+        })
+    }
+
+  </script>
+</html>
