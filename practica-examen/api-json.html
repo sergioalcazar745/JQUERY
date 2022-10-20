@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JSON</title>
+  </head>
+  <body>
+    <h1>API JsonPlaceholder</h1>
+    <table id="tablapost">
+      <thead>
+        <tr>
+          <th>userId</th>
+          <th>id</th>
+          <th>title</th>
+          <th>body</th>
+          <th>modificar</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <hr/>
+    <div id="modificarDatos">
+        <h2>Modificar post</h2>
+        <!-- <label>postId</label>
+        <input type="text" id="cajauserid"><br/><br/>
+        <label>Id</label>
+        <input type="text" id="cajaid"><br/><br/>
+        <label>Title</label>
+        <textarea name="" id="" cols="30" rows="10" id="cajatitle"></textarea><br/><br/>
+        <label>body</label>
+        <textarea name="" id="" cols="30" rows="10" id="cajabody"></textarea><br/><br/>
+        <button type="button" id="modificar">Modificar</button> -->
+    </div>
+  </body>
+  <script src="../js/jquery-3.6.1.min.js"></script>
+  <script>
+
+    var requestBase = "https://jsonplaceholder.typicode.com/";
+
+    $(document).ready(function () {
+        $.getJSON(requestBase + "posts", function (data) {
+            $.each(data, function (index, post) {
+                var tr = $("<tr>");
+                var tdPostId = $("<td>", { text: post.userId });
+                var tdId = $("<td>", { text: post.id });
+                var tdTitle = $("<td>", { text: post.title });
+                var tdBody = $("<td>", { text: post.body });
+                var tdModificar = $("<td>");     
+                var a = $("<a>", {"text": "Modificar", "data-userid": post.postId, "data-id": post.id, "href": "#"});
+                a.click(function(){
+                    mostrarPost(parseInt($(this).data("userid")), parseInt($(this).data("id")));
+                });
+                tdModificar.append(a);
+                tr.append(tdPostId, tdId, tdTitle, tdBody, tdModificar)
+                $("#tablapost").append(tr);
+            });
+        });
+
+        $("#modificar").click(function(){
+
+        });
+    });
+
+    function mostrarPost(userid, id){
+        $.getJSON(requestBase + "posts/" + id, function(data){
+            $.each(data, function(key, value){
+                var label = $("<label>", {"text": key})
+                var input = $("<input>", {"val": value})
+                $("#modificarDatos").append(label, input);
+            });
+        })
+        // var userId = $("#cajauserid").val();
+        // var id = $("#cajaid").val()
+        // var title = $("#cajatitle").val();
+        // var body = $("#cajabody").val();
+    }
+
+  </script>
+</html>
