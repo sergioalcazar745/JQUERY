@@ -73,6 +73,7 @@
 
     function mostrarTabla(){
         var oficio = $("#selectoficio").val();
+        console.log(oficio)
         var request = "api/Empleados/GetEmpleadosOficio/empleadosoficio/"+oficio; 
         $.getJSON(requestBase + request, function(data){
             $("#tablaoficios tbody").empty();
